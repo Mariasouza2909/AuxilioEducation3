@@ -10,13 +10,14 @@ st.header("Importar ou Criar Base de Dados")
 
 arquivo = st.file_uploader("Selecione um arquivo CSV (ou continue com base existente):", type=["csv"])
 
-if arquivo:
-    df = pd.read_csv(arquivo)
-    df.to_csv("dados.csv", index=False)
-    st.success("✅ Arquivo salvo")
-elif os.path.exists("dados.csv"):
-    df = pd.read_csv("dados.csv")
-else:
+try:
+    if arquivo:
+        df = pd.read_csv(arquivo)
+        df.to_csv("dados.csv", index=False)
+        st.success("✅ Arquivo salvo")
+    else:
+        df = pd.read_csv("dados.csv")
+except FileNotFoundError:
     df = pd.DataFrame(columns=["Data", "Máquina", "Turno", "Peças Totais", "Peças com defeito"])
     
 st.dataframe(df, use_container_width=True, height=250)
@@ -46,10 +47,10 @@ if st.button("Adicionar registro"):
             "Peças com defeito": [defeituosas]
         })
 
-        if os.path.exists("dados.csv"):
+        try:
             df = pd.read_csv("dados.csv")
             df = pd.concat([df, novo], ignore_index=True)
-        else:
+        except FileNotFoundError:
             df = novo
 
         df.to_csv("dados.csv", index=False)
@@ -100,5 +101,4 @@ st.header("💾  Exportar Base Atualizada")
 nomearq = st.text_input("Nome do arquivo CSV:", "dados.csv")
 if st.button("Salvar CSV"):
     df.to_csv(nomearq, index=False)
-
     st.success(f"Arquivo '{nomearq}' salvo com sucesso!")
