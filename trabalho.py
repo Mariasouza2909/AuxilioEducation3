@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-import os
+
 st.title("🏭 Controle de produção de máquinas")
 
 st.write("Gerencie a produção diária e monitore o desempenho de cada máquina da fábrica.")
@@ -100,4 +100,5 @@ st.header("💾  Exportar Base Atualizada")
 nomearq = st.text_input("Nome do arquivo CSV:", "dados.csv")
 if st.button("Salvar CSV"):
     df.to_csv(nomearq, index=False)
+
     st.success(f"Arquivo '{nomearq}' salvo com sucesso!")
